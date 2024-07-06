@@ -26,9 +26,31 @@ class courseController {
 
         const newCourse = new course(formData);
 
-        newCourse.save();
+        newCourse.save()
+            .then(() => res.redirect('/'))
+            .catch(error => next(error))
 
-        res.send("Course Save!!!1")
+    }
+
+    // [GET] /course/:id/edit
+    async edit(req, res, next) {
+        try {
+            const findCourse = await course.findById(req.params.id);
+            console.log(findCourse);
+
+            res.render('course/edit', {
+                findCourse: mongooseToObject(findCourse)
+            })
+        } catch (error) {
+            console.log('nothing');
+        }
+    }
+    
+    // [PUT] /course/:id
+    update(req, res, next) {
+        course.updateOne({ _id: req.params.id }, req.body)
+            .then(() => res.redirect('/me/stored/courses'))
+            .catch(next);
     }
 
 }

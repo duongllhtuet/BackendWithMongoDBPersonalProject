@@ -1,0 +1,51 @@
+<div class="mt-4">
+  <h3>Sua khoa hoc</h3>
+
+  <form class="mt-4" method="POST" action="/courses/{{findCourse._id}}?_method=PUT">
+    <div class="mb-3">
+      <label for="name">Tên khóa học</label>
+      <input
+        type="text"
+        class="form-control"
+        value="{{findCourse.name}}"
+        id="name"
+        name="name"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="description">Mô tả khóa học</label>
+      <input
+        type="text"
+        class="form-control"
+        value="{{findCourse.description}}"
+        id="description"
+        name="description"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="videoID">VideoID</label>
+      <input
+        type="text"
+        class="form-control"
+        value="{{findCourse.videoID}}"
+        id="videoID"
+        name="videoID"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="level">Mức độ khó của khóa học</label>
+      <input
+        type="text"
+        class="form-control"
+        value="{{findCourse.level}}"
+        id="level"
+        name="level"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Luu lai</button>
+  </form>
+</div>
