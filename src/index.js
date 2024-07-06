@@ -7,6 +7,10 @@ const app = express();
 const port = 3000;
 
 const routes = require('./routes/index.Routes');
+const db = require('./config/db/index')
+
+// Connect to db
+db.connect();
 
 // Use static duoc ho tro boi express
 app.use(express.static(path.join(__dirname, 'public')));
