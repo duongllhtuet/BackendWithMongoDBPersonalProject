@@ -1,58 +1,79 @@
-const course = require('../models/course');
-const { mongooseToObject } = require('../../until/mongoose');
+const course = require("../models/course");
+const { mongooseToObject } = require("../../until/mongoose");
 
 class courseController {
+  // [GET] /course/:slug
+  show(req, res, next) {
+    course
+      .findOne({ slug: req.params.slug })
+      .then((course) => {
+        res.render("course/show", { course: mongooseToObject(course) });
+      })
+      .catch(next);
+  }
 
-    // [GET] /course/:slug
-    show(req, res, next) {
-        course.findOne({ slug: req.params.slug })
-            .then(course => {
-                res.render('course/show', { course: mongooseToObject(course) })
-            })
-            .catch(next)
+  // [GET] /course/create
+  create(req, res, next) {
+    res.render("course/create");
+  }
+
+  // [POST] /course/store
+  store(req, res, next) {
+    req.body.image = `https://img-youtube.%20com/vi/${req.body.videoID}/sddefault.jpg`;
+
+    const newCourse = new course(req.body);
+
+    newCourse
+      .save()
+      .then(() => res.redirect("/me/stored/courses"))
+      .catch((error) => next(error));
+  }
+
+  // [GET] /course/:id/edit
+  async edit(req, res, next) {
+    try {
+      const findCourse = await course.findById(req.params.id);
+      console.log(findCourse);
+
+      res.render("course/edit", {
+        findCourse: mongooseToObject(findCourse),
+      });
+    } catch (error) {
+      console.log("nothing");
     }
+  }
 
-    // [GET] /course/create
-    create(req, res, next) {
-        res.render('course/create');
-    }
+  // [PUT] /course/:id
+  update(req, res, next) {
+    course
+      .updateOne({ _id: req.params.id }, req.body)
+      .then(() => res.redirect("/me/stored/courses"))
+      .catch(next);
+  }
 
-    // [POST] /course/store
-    store(req, res, next) {
-        // res.json(req.body);
-        const formData = req.body;
+  // [DELETE] /course/:id
+  delete(req, res, next) {
+    course
+      .delete({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
+  }
 
-        formData.image = `https://img-youtube.%20com/vi/${formData.videoID}/sddefault.jpg`;
+  // [DELETE] /course/:id/force
+  forceDelete(req, res, next) {
+    course
+      .deleteOne({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
+  }
 
-        const newCourse = new course(formData);
-
-        newCourse.save()
-            .then(() => res.redirect('/'))
-            .catch(error => next(error))
-
-    }
-
-    // [GET] /course/:id/edit
-    async edit(req, res, next) {
-        try {
-            const findCourse = await course.findById(req.params.id);
-            console.log(findCourse);
-
-            res.render('course/edit', {
-                findCourse: mongooseToObject(findCourse)
-            })
-        } catch (error) {
-            console.log('nothing');
-        }
-    }
-    
-    // [PUT] /course/:id
-    update(req, res, next) {
-        course.updateOne({ _id: req.params.id }, req.body)
-            .then(() => res.redirect('/me/stored/courses'))
-            .catch(next);
-    }
-
+  // [Patch] /course/:id/restore
+  restore(req, res, next) {
+    course
+      .restore({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
+  }
 }
 
 module.exports = new courseController();

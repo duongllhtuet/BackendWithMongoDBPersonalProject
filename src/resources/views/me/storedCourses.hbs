@@ -1,5 +1,35 @@
 <div class="mt-4">
-  <h3>Khoa hoc cua toi</h3>
+  <div class="">
+    <h3>Khoa hoc cua toi</h3>
+
+    {{#if countDeleted}}
+      <a href="/me/trash/courses">Thung rac ({{countDeleted}})</a>
+    {{/if}}
+
+    <div class="mt-4 d-flex align-items-center">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="disabledFieldsetCheck"
+        />
+        <label class="form-check-label" for="disabledFieldsetCheck">
+          Chọn tất cả
+        </label>
+      </div>
+
+      <select class="form-select form-select-sm checkbox-select-all-options" aria-label="Default select example" id="">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+
+      <button class="btn btn-primary btn-sm">
+        Apply
+      </button>
+    </div>
+  </div>
 
   <table class="table mt-4">
     <thead>
@@ -7,7 +37,7 @@
         <th scope="col">#</th>
         <th scope="col">Ten khoa hoc</th>
         <th scope="col">Trinh do</th>
-        <th scope="col" colspan="3">Thoi gian tao</th>
+        <th scope="col" colspan="3">Thoi diem xoa</th>
       </tr>
     </thead>
     <tbody>
@@ -16,17 +46,82 @@
           <th scope="row">{{sum @index 1}}</th>
           <td>{{this.name}}</td>
           <td>{{this.level}}</td>
-          <td>{{this.createdAt}}</td>
+          <td>{{this.deletedAt}}</td>
 
           <td>
-            <a href="/courses/{{this._id}}/edit" type="button" class="btn btn-link">Sua</a>
+            <a
+              href="/courses/{{this._id}}/edit"
+              type="button"
+              class="btn btn-link"
+            >Sua</a>
           </td>
 
           <td>
-            <a href="" type="button" class="btn btn-link">Xoa</a>
+            <a
+              href=""
+              type="button"
+              class="btn btn-link"
+              data-bs-toggle="modal"
+              data-bs-target="#delete-course-modal"
+              data-id="{{this._id}}"
+            >Xoa</a>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5" class="text-center">
+            Bạn chưa đăng khóa học nào
+            <a href="/courses/create">Đăng khóa học</a>
           </td>
         </tr>
       {{/each}}
     </tbody>
   </table>
 </div>
+
+{{! Confirm delete course }}
+<div class="modal" tabindex="-1" id="delete-course-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có muốn xóa không</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >Cancel</button>
+        <button
+          id="btn-delete-course"
+          type="button"
+          class="btn btn-danger"
+        >Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{! Delete hidden form }}
+<form name="delete-course-form" method="POST"></form>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() { var courseId; var
+  deleteForm = document.forms['delete-course-form']; var btnDeleteCourse =
+  document.getElementById('btn-delete-course');
+  $('#delete-course-modal').on('show.bs.modal', function (event) { var button =
+  $(event.relatedTarget); courseId = button.data('id'); });
+  btnDeleteCourse.onclick = function() { deleteForm.action = '/courses/' +
+  courseId + '?_method=DELETE'; deleteForm.submit(); } })
+
+</script>

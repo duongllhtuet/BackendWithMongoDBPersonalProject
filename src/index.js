@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const { engine } = require("express-handlebars");
-var methodOverride = require('method-override');
+var methodOverride = require("method-override");
 
 const app = express();
 const port = 3000;
@@ -14,7 +14,9 @@ const db = require("./config/db/index");
 db.connect();
 
 // Use static duoc ho tro boi express
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname + "/public"));
+
+console.log(__dirname);
 
 // Aplly middleware de handle body
 app.use(
@@ -26,7 +28,7 @@ app.use(express.json());
 
 // XMLHttpRequest, fetch, axios => Dung de gui du lieu
 
-app.use(methodOverride('_method'))
+app.use(methodOverride("_method"));
 
 // HTTP logger
 app.use(morgan("combined"));
@@ -38,7 +40,7 @@ app.engine(
     extname: ".hbs",
     helpers: {
       sum: (a, b) => a + b,
-    }
+    },
   })
 );
 app.set("view engine", "hbs");
