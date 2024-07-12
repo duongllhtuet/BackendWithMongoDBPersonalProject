@@ -1,8 +1,8 @@
-const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const { engine } = require("express-handlebars");
-var methodOverride = require("method-override");
+const methodOverride = require("method-override");
+const path = require("path");
 
 const app = express();
 const port = 3000;
@@ -13,27 +13,20 @@ const db = require("./config/db/index");
 // Connect to db
 db.connect();
 
-// Use static duoc ho tro boi express
-app.use(express.static(__dirname + "/public"));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
 
-console.log(__dirname);
-
-// Aplly middleware de handle body
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+// Apply middleware to handle body parsing
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// XMLHttpRequest, fetch, axios => Dung de gui du lieu
-
+// Use method override to support HTTP verbs like PUT and DELETE
 app.use(methodOverride("_method"));
 
 // HTTP logger
 app.use(morgan("combined"));
 
-// Template engine
+// Template engine setup
 app.engine(
   "hbs",
   engine({
@@ -46,8 +39,10 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "resources/views"));
 
+// Define routes
 routes(app);
 
-app.listen(port, () =>
-  console.log("Example app listening at http://localhost:3000")
-);
+// Start the server
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
