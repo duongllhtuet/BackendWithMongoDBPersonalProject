@@ -7,6 +7,7 @@ router.get("/create", courseController.create);
 router.post("/store", courseController.store);
 router.put("/:id", courseController.update);
 router.post("/handleFormActions", courseController.handleFormActions);
+router.post("/handleFormActionsTrash", courseController.handleFormActionsTrash);
 router.patch("/:id/restore", courseController.restore);
 router.delete("/:id", courseController.delete);
 router.delete("/:id/force", courseController.forceDelete);

@@ -79,15 +79,37 @@ class courseController {
   //  [POST] /course/handleFormActions
   handleFormActions(req, res, next) {
     switch (req.body.action) {
-      case 'delete':
-        course.delete({ _id: { $in: req.body.courseIds } })
+      case "delete":
+        course
+          .delete({ _id: { $in: req.body.courseIds } })
           .then(() => res.redirect("back"))
           .catch(next);
-      
         break;
-    
+
       default:
-        res.render("error", { error: 'Action is invalid!!' });
+        res.render("error", { error: "Action is invalid!!" });
+    }
+  }
+
+  //  [POST] /course/handleFormActionsTrash
+  handleFormActionsTrash(req, res, next) {
+    switch (req.body.action) {
+      case "DELETE":
+        course
+          .deleteMany({ _id: { $in: req.body.courseIds } })
+          .then(() => res.redirect("back"))
+          .catch(next);
+        break;
+      case "PATCH":
+        course
+          .restore({ _id: { $in: req.body.courseIds } })
+          .then(() => res.redirect("back"))
+          .catch(next);
+        break;
+
+      default:
+        res.render("error", { error: "Action is invalid!!" });
+        break;
     }
   }
 }
